@@ -1,0 +1,191 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-06-04T00:00:00.000Z",
+  "__export_source": "insomnia.desktop",
+  "resources": [
+    {
+      "_id": "wrk_pdfgate",
+      "_type": "workspace",
+      "name": "PDFGate API",
+      "description": "API testing for PDFGate Laravel project",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_pdfgate",
+      "_type": "environment",
+      "parentId": "wrk_pdfgate",
+      "name": "Local",
+      "data": {
+        "baseUrl": "http://localhost:8000",
+        "apiUrl": "http://localhost:8000/api",
+        "token": ""
+      },
+      "dataPropertyOrder": {
+        "&": ["baseUrl", "apiUrl", "token"]
+      },
+      "isPrivate": false,
+      "created": 1717420800000,
+      "modified": 1717420800000
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_pdfgate",
+      "name": "Authentication",
+      "description": "Login and token management endpoints"
+    },
+    {
+      "_id": "req_login",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Login",
+      "method": "POST",
+      "url": "{{ _.apiUrl }}/login",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1717420800000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_create_token",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Create API Token",
+      "method": "POST",
+      "url": "{{ _.apiUrl }}/tokens",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}",
+          "disabled": false
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"mobile-app\",\n  \"abilities\": [\"*\"]\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1717420700000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_logout",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Logout",
+      "method": "POST",
+      "url": "{{ _.apiUrl }}/logout",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}",
+          "disabled": false
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": ""
+      },
+      "authentication": {},
+      "metaSortKey": -1717420600000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "fld_user",
+      "_type": "request_group",
+      "parentId": "wrk_pdfgate",
+      "name": "User",
+      "description": "User profile endpoints"
+    },
+    {
+      "_id": "req_get_user",
+      "_type": "request",
+      "parentId": "fld_user",
+      "name": "Get Current User",
+      "method": "GET",
+      "url": "{{ _.apiUrl }}/user",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}",
+          "disabled": false
+        }
+      ],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -1717420500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "fld_tokens",
+      "_type": "request_group",
+      "parentId": "wrk_pdfgate",
+      "name": "Token Management",
+      "description": "Manage API tokens"
+    },
+    {
+      "_id": "req_revoke_token",
+      "_type": "request",
+      "parentId": "fld_tokens",
+      "name": "Revoke Token",
+      "method": "DELETE",
+      "url": "{{ _.apiUrl }}/tokens/1",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}",
+          "disabled": false
+        }
+      ],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -1717420400000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    }
+  ]
+}

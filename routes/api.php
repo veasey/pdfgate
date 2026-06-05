@@ -63,6 +63,20 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
     });
 
+    Route::post('/pdf', function (Request $request) {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
+        ]);
+
+        $html = view('pdf.template', $validated)->render();
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html);
+
+        return response($pdf->output(), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="document.pdf"');
+    });
+
     Route::delete('/tokens/{token_id}', function (Request $request, $token_id) {
         $request->user()->tokens()->where('id', $token_id)->delete();
 

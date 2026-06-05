@@ -69,6 +69,10 @@ Route::middleware('auth:sanctum')->group(function () {
             'body' => 'required|string',
         ]);
 
+        $user = $request->user();
+        $user->increment('pdf_generated_count');
+        $user->update(['last_generated_at' => now()]);
+
         $html = view('pdf.template', $validated)->render();
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html);
 

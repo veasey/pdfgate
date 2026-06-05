@@ -15,11 +15,46 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::factory()->create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'password' => 'password',
+            'is_admin' => true,
+            'is_subscribed' => true,
+            'pdf_generated_count' => 12,
+        ]);
 
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'password' => 'password',
+            'is_subscribed' => false,
+            'pdf_generated_count' => 3,
+        ]);
+
+        // Additional test accounts
+        User::factory()->create([
+            'name' => 'Member One',
+            'email' => 'member1@example.com',
+            'password' => 'password',
+            'is_subscribed' => true,
+            'pdf_generated_count' => 5,
+        ]);
+
+        User::factory()->create([
+            'name' => 'Member Two',
+            'email' => 'member2@example.com',
+            'password' => 'password',
+            'is_subscribed' => false,
+            'pdf_generated_count' => 1,
+        ]);
+
+        User::factory()->create([
+            'name' => 'Viewer',
+            'email' => 'viewer@example.com',
+            'password' => 'password',
+            'is_subscribed' => false,
+            'pdf_generated_count' => 0,
         ]);
     }
 }

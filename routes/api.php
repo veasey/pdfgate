@@ -48,6 +48,21 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
     });
 
+    Route::get('/subscription', function (Request $request) {
+        return response()->json([
+            'is_subscribed' => $request->user()->is_subscribed,
+        ]);
+    });
+
+    Route::post('/subscribe', function (Request $request) {
+        $request->user()->update(['is_subscribed' => true]);
+
+        return response()->json([
+            'is_subscribed' => true,
+            'message' => 'Subscription activated (fake Stripe)',
+        ]);
+    });
+
     Route::delete('/tokens/{token_id}', function (Request $request, $token_id) {
         $request->user()->tokens()->where('id', $token_id)->delete();
 

@@ -1,5 +1,8 @@
 # PDF Gate
 
+A demo of a paid API service for generating PDFs. This model could be used to generate formatted invoices, manifests
+etc using the data of an existing system.
+
 ## Demo Features
 
 This demo project includes the following features:
@@ -7,6 +10,10 @@ This demo project includes the following features:
 | Feature                   | Description                                                                |
 | ------------------------- | -------------------------------------------------------------------------- |
 | Auth + API tokens         | Laravel Sanctum, basic token abilities, create/revoke tokens, stateless    |
+| Mocked Subsriptions       | Users have a "subscribed" flag. This could be extended into stripe payment |
+| PDF Generation            | Generates... er... PDFS                                                    |
+| Usage tracking (metered billing) | You can build analytics + billing reconciliation                     |
+
 
 ## API Authentication
 
@@ -42,38 +49,6 @@ This project uses **Laravel Sanctum** for API token-based authentication. All AP
 - `POST /api/logout` - Logout and revoke current token
 - `POST /api/tokens` - Create a new API token
 - `DELETE /api/tokens/{token_id}` - Revoke a specific token
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
-```
-
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
 ## License
 

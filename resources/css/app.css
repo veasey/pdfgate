@@ -7,3 +7,94 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+* { 
+    margin: 0; padding: 0; box-sizing: border-box; 
+}
+body { 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+}
+.container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 60px 40px;
+    max-width: 600px;
+    text-align: center;
+}
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+    color: #667eea;
+}
+.tagline {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 12px;
+}
+.description {
+    color: #888;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+.features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 40px;
+    text-align: left;
+}
+.feature {
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+.feature h3 {
+    color: #667eea;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+.feature p {
+    color: #666;
+    font-size: 0.9rem;
+}
+.cta {
+    display: inline-block;
+    padding: 16px 48px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;
+    cursor: pointer;
+}
+.cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
+.footer {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #eee;
+    font-size: 0.9rem;
+    color: #888;
+}
+.footer a {
+    color: #667eea;
+    text-decoration: none;
+}
+.footer a:hover {
+    text-decoration: underline;
+}

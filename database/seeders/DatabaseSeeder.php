@@ -15,43 +15,48 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
-            'name' => 'Admin User',
+        User::updateOrCreate([
             'email' => 'admin@example.com',
+        ], [
+            'name' => 'Admin User',
             'password' => 'password',
             'is_admin' => true,
             'is_subscribed' => true,
             'pdf_generated_count' => 12,
         ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
+        User::updateOrCreate([
             'email' => 'test@example.com',
+        ], [
+            'name' => 'Test User',
             'password' => 'password',
             'is_subscribed' => false,
             'pdf_generated_count' => 3,
         ]);
 
         // Additional test accounts
-        User::factory()->create([
-            'name' => 'Member One',
+        User::updateOrCreate([
             'email' => 'member1@example.com',
+        ], [
+            'name' => 'Member One',
             'password' => 'password',
             'is_subscribed' => true,
             'pdf_generated_count' => 5,
         ]);
 
-        User::factory()->create([
-            'name' => 'Member Two',
+        User::updateOrCreate([
             'email' => 'member2@example.com',
+        ], [
+            'name' => 'Member Two',
             'password' => 'password',
             'is_subscribed' => false,
             'pdf_generated_count' => 1,
         ]);
 
-        User::factory()->create([
-            'name' => 'Viewer',
+        User::updateOrCreate([
             'email' => 'viewer@example.com',
+        ], [
+            'name' => 'Viewer',
             'password' => 'password',
             'is_subscribed' => false,
             'pdf_generated_count' => 0,

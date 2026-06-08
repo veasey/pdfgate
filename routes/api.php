@@ -1,91 +1,22 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PdfController;
+use App\Http\Controllers\Api\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/login', function (Request $request) {
-    $validated = $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
-
-    if (!auth()->attempt($validated)) {
-        return response()->json([
-            'message' => 'Invalid credentials',
-        ], 401);
-    }
-
-    $user = auth()->user();
-    $token = $user->createToken('api-token')->plainTextToken;
-
-    return response()->json([
-        'token' => $token,
-        'user' => $user,
-    ]);
-});
+Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', function (Request $request) {
-        $request->user()->currentAccessToken()->delete();
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/user', [AuthController::class, 'user']);
+    Route::post('/tokens', [AuthController::class, 'createToken']);
+    Route::delete('/tokens/{token_id}', [AuthController::class, 'revokeToken']);
 
-        return response()->json([
-            'message' => 'Logged out successfully',
-        ]);
-    });
+    Route::get('/subscription', [SubscriptionController::class, 'status']);
+    Route::post('/subscribe', [SubscriptionController::class, 'subscribe']);
 
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
-
-    Route::post('/tokens', function (Request $request) {
-        $token = $request->user()->createToken(
-            $request->input('name', 'api-token'),
-            $request->input('abilities', ['*'])
-        );
-
-        return response()->json([
-            'token' => $token->plainTextToken,
-        ]);
-    });
-
-    Route::get('/subscription', function (Request $request) {
-        return response()->json([
-            'is_subscribed' => $request->user()->is_subscribed,
-        ]);
-    });
-
-    Route::post('/subscribe', function (Request $request) {
-        $request->user()->update(['is_subscribed' => true]);
-
-        return response()->json([
-            'is_subscribed' => true,
-            'message' => 'Subscription activated (fake Stripe)',
-        ]);
-    });
-
-    Route::post('/pdf', function (Request $request) {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'body' => 'required|string',
-        ]);
-
-        $user = $request->user();
-        $user->increment('pdf_generated_count');
-        $user->update(['last_generated_at' => now()]);
-
-        $html = view('pdf.template', $validated)->render();
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html);
-
-        return response($pdf->output(), 200)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="document.pdf"');
-    });
-
-    Route::delete('/tokens/{token_id}', function (Request $request, $token_id) {
-        $request->user()->tokens()->where('id', $token_id)->delete();
-
-        return response()->json([
-            'message' => 'Token revoked successfully',
-        ]);
-    });
+    Route::post('/pdf', [PdfController::class, 'generate'])->name('api.pdf.generate');
+    Route::get('/pdf/{pdfJob}', [PdfController::class, 'show'])->name('api.pdf.show');
+    Route::get('/pdf/{pdfJob}/download', [PdfController::class, 'download'])->name('api.pdf.download');
 });

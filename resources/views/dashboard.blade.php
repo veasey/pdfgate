@@ -56,6 +56,34 @@
         </div>
 
         <div class="section panel">
+            <h2>API tokens</h2>
+            <p style="color:#64748b; margin:8px 0 16px;">Manage your personal access tokens for API requests.</p>
+
+            @if(auth()->user()->apiTokens->isEmpty())
+                <p style="color:#475569; margin:0;">No API tokens have been issued yet.</p>
+            @else
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Last used</th>
+                            <th>Abilities</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(auth()->user()->apiTokens as $token)
+                            <tr>
+                                <td>{{ $token->name }}</td>
+                                <td>{{ optional($token->last_used_at)->diffForHumans() ?? 'Never' }}</td>
+                                <td>{{ implode(', ', $token->abilities) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        </div>
+
+        <div class="section panel">
             <h2>Top PDF users</h2>
             <canvas id="usageChart" style="max-height:420px;"></canvas>
         </div>

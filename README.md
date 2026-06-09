@@ -1,55 +1,34 @@
 # PDF Gate
 
-A demo of a paid API service for generating PDFs. This model could be used to generate formatted invoices, manifests
-etc using the data of an existing system.
+**A demo Laravel API for a paid, metered PDF generation service.**
 
-## Demo Features
+This project demonstrates how to build a production-ready, asynchronous PDF generation SaaS backend. It can be used to generate invoices, reports, manifests, certificates, or any document by feeding data from an existing system.
 
-This demo project includes the following features:
+Perfect for showcasing Laravel skills in API design, background jobs, PDF handling, authentication, and monetization patterns.
 
-| Feature                   | Description                                                                |
-| ------------------------- | -------------------------------------------------------------------------- |
-| Auth + API tokens         | Laravel Sanctum, basic token abilities, create/revoke tokens, stateless    |
-| Mocked Subsriptions       | Users have a "subscribed" flag. This could be extended into stripe payment |
-| PDF Generation            | Generates... er... PDFS                                                    |
-| Usage tracking (metered billing) | You can build analytics + billing reconciliation                     |
+![Laravel](https://img.shields.io/badge/Laravel-13.8-red?style=flat&logo=laravel)
+![PHP](https://img.shields.io/badge/PHP-8.3-blue?style=flat&logo=php)
+![Sanctum](https://img.shields.io/badge/Sanctum-Auth-green?style=flat)
 
+## ✨ Key Features
 
-## API Authentication
+- **🔐 Secure API Authentication** — Laravel Sanctum with personal access tokens (stateless)
+- **💳 Mocked Subscription Gating** — Premium features protected by subscription middleware (ready for Stripe)
+- **📄 Asynchronous PDF Generation** — Queued jobs using DomPDF + Blade templates
+- **📊 Usage Tracking** — Metered billing foundation (tracks PDF count per user)
+- **✅ Clean Architecture** — Form Requests, Policies, Jobs, Events-ready structure
+- **🧪 Ready for Testing** — PHPUnit tests + full Insomnia collection
 
-This project uses **Laravel Sanctum** for API token-based authentication. All API endpoints require authentication via bearer tokens.
+## 🚀 Quick Start
 
-### Getting Started
+### 1. Clone & Setup
 
-1. **Login to get a token:**
-   ```bash
-   curl -X POST http://localhost:8000/api/login \
-     -H "Content-Type: application/json" \
-     -d '{"email": "user@example.com", "password": "password"}'
-   ```
+```bash
+git clone https://github.com/veasey/pdfgate.git
+cd pdfgate
 
-   Response:
-   ```json
-   {
-     "token": "1|abc123def456...",
-     "user": { "id": 1, "name": "User", "email": "user@example.com" }
-   }
-   ```
+# Install dependencies and run setup
+composer run setup
 
-2. **Use the token for authenticated requests:**
-   ```bash
-   curl -X GET http://localhost:8000/api/user \
-     -H "Authorization: Bearer 1|abc123def456..."
-   ```
-
-### API Endpoints
-
-- `POST /api/login` - Login and receive an API token
-- `GET /api/user` - Get authenticated user info
-- `POST /api/logout` - Logout and revoke current token
-- `POST /api/tokens` - Create a new API token
-- `DELETE /api/tokens/{token_id}` - Revoke a specific token
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Start development servers (PHP + Queue worker + Vite)
+composer run dev

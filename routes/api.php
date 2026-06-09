@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PdfController;
 use App\Http\Controllers\Api\SubscriptionController;
+use App\Http\Middleware\CheckSubscription;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -16,7 +17,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/subscription', [SubscriptionController::class, 'status']);
     Route::post('/subscribe', [SubscriptionController::class, 'subscribe']);
 
-    Route::post('/pdf', [PdfController::class, 'generate'])->name('api.pdf.generate');
-    Route::get('/pdf/{pdfJob}', [PdfController::class, 'show'])->name('api.pdf.show');
-    Route::get('/pdf/{pdfJob}/download', [PdfController::class, 'download'])->name('api.pdf.download');
+    Route::middleware([CheckSubscription::class])->group(function () {
+        Route::post('/pdf', [PdfController::class, 'generate'])->name('api.pdf.generate');
+        Route::get('/pdf/{pdfJob}', [PdfController::class, 'show'])->name('api.pdf.show');
+        Route::get('/pdf/{pdfJob}/download', [PdfController::class, 'download'])->name('api.pdf.download');
+    });
 });

@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
 
 class PdfController extends Controller
 {
-    public function generate(Request $request): Response
+    public function generate(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -28,14 +28,16 @@ class PdfController extends Controller
             'payload' => $validated,
         ]);
 
-        GeneratePdfJob::dispatchSync($pdfJob);
+        GeneratePdfJob::dispatch($pdfJob);
 
-        $pdfJob->refresh();
-        $content = base64_decode($pdfJob->result ?? '');
-
-        return response($content, 200)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="document.pdf"');
+        return response()->json([
+            'id' => $pdfJob->id,
+            'status' => $pdfJob->status,
+            'payload' => $pdfJob->payload,
+            'download_url' => route('api.pdf.download', $pdfJob),
+            'created_at' => $pdfJob->created_at,
+            'updated_at' => $pdfJob->updated_at,
+        ], 202);
     }
 
     public function show(Request $request, PdfJob $pdfJob): JsonResponse

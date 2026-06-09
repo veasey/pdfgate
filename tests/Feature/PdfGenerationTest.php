@@ -2,8 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\GeneratePdfJob;
+use App\Models\PdfJob;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class PdfGenerationTest extends TestCase
@@ -19,11 +22,15 @@ class PdfGenerationTest extends TestCase
         $this->user = User::factory()->create([
             'email' => 'pdf@example.com',
             'password' => bcrypt('password'),
+            'is_subscribed' => true,
+            'subscribed_until' => now()->addMonth(),
         ]);
     }
 
-    public function test_pdf_endpoint_returns_pdf(): void
+    public function test_pdf_endpoint_queues_pdf_job(): void
     {
+        Queue::fake();
+
         $token = $this->user->createToken('api-token')->plainTextToken;
 
         $response = $this->withHeader('Authorization', "Bearer $token")
@@ -32,11 +39,20 @@ class PdfGenerationTest extends TestCase
                 'body' => "Line one\nLine two\nLine three",
             ]);
 
-        $response->assertStatus(200)
-            ->assertHeader('Content-Type', 'application/pdf')
-            ->assertHeader('Content-Disposition', 'inline; filename="document.pdf"');
+        $response->assertStatus(202)
+            ->assertJsonStructure([
+                'id',
+                'status',
+                'payload',
+                'download_url',
+                'created_at',
+                'updated_at',
+            ])
+            ->assertJson(['status' => PdfJob::STATUS_PENDING]);
 
-        $this->assertStringStartsWith('%PDF', $response->getContent());
+        Queue::assertPushed(GeneratePdfJob::class, function ($job) {
+            return $job->pdfJob->payload['title'] === 'My Test PDF';
+        });
     }
 
     public function test_pdf_endpoint_requires_authentication(): void
@@ -60,5 +76,26 @@ class PdfGenerationTest extends TestCase
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['title']);
+    }
+
+    public function test_pdf_endpoint_requires_active_subscription(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'inactive@example.com',
+            'password' => bcrypt('password'),
+            'is_subscribed' => false,
+            'subscribed_until' => null,
+        ]);
+
+        $token = $user->createToken('api-token')->plainTextToken;
+
+        $response = $this->withHeader('Authorization', "Bearer $token")
+            ->postJson('/api/pdf', [
+                'title' => 'My Test PDF',
+                'body' => 'Test body',
+            ]);
+
+        $response->assertStatus(402)
+            ->assertJson(["message" => 'Subscription required.']);
     }
 }

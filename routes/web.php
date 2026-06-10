@@ -49,12 +49,15 @@ Route::middleware('auth')->group(function () {
         $totalPdfCount = User::sum('pdf_generated_count');
         $topUsers = User::orderByDesc('pdf_generated_count')->limit(5)->get();
 
+        $user = Auth::user();
+
         return view('dashboard', [
             'totalUsers' => $totalUsers,
             'subscribedUsers' => $subscribedUsers,
             'totalPdfCount' => $totalPdfCount,
             'topUserLabels' => $topUsers->pluck('email'),
             'topUserCounts' => $topUsers->pluck('pdf_generated_count'),
+            'pdfJobs' => $user->pdfJobs()->latest()->limit(10)->get(),
         ]);
     })->name('dashboard');
 
@@ -79,6 +82,21 @@ Route::middleware('auth')->group(function () {
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'inline; filename="document.pdf"');
     })->name('pdf.builder.generate');
+
+    // Allow members to view/download their generated PDFs from the web dashboard
+    Route::get('/pdf/{pdfJob}', function (Request $request, \App\Models\PdfJob $pdfJob) {
+        // authorize access
+        if ($pdfJob->user_id !== $request->user()->id) {
+            abort(403);
+        }
+
+        return view('pdf.show', [
+            'job' => $pdfJob,
+        ]);
+    })->name('pdf.show');
+
+    Route::get('/pdf/{pdfJob}/download', [\App\Http\Controllers\Api\PdfController::class, 'download'])
+        ->name('pdf.download');
 
     Route::get('/admin/users', function () {
         $user = Auth::user();

@@ -84,6 +84,53 @@
         </div>
 
         <div class="section panel">
+            <h2>Your PDFs</h2>
+            <p style="color:#64748b; margin:8px 0 16px;">Recent PDFs you've generated. Click to view or download when ready.</p>
+
+            @if(isset($pdfJobs) && $pdfJobs->isEmpty())
+                <p style="color:#475569; margin:0;">You haven't generated any PDFs yet.</p>
+            @else
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($pdfJobs ?? [] as $job)
+                            <tr>
+                                <td>{{ $job->id }}</td>
+                                <td>{{ $job->payload['title'] ?? '-' }}</td>
+                                <td>
+                                    @if($job->status === \App\Models\PdfJob::STATUS_PENDING)
+                                        <span class="badge gray">Pending</span>
+                                    @elseif($job->status === \App\Models\PdfJob::STATUS_PROCESSING)
+                                        <span class="badge blue">Processing</span>
+                                    @elseif($job->status === \App\Models\PdfJob::STATUS_COMPLETED)
+                                        <span class="badge green">Completed</span>
+                                    @else
+                                        <span class="badge gray">{{ ucfirst($job->status) }}</span>
+                                    @endif
+                                </td>
+                                <td>{{ $job->created_at->diffForHumans() }}</td>
+                                <td>
+                                    <a href="{{ route('pdf.show', $job) }}" class="button" style="background:#0f172a; padding:8px 10px;">View</a>
+                                    @if($job->status === \App\Models\PdfJob::STATUS_COMPLETED && $job->result)
+                                        <a href="{{ route('pdf.download', $job) }}" class="button" style="background:#10b981; padding:8px 10px; margin-left:8px;">Download</a>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        </div>
+
+        <div class="section panel">
             <h2>Top PDF users</h2>
             <canvas id="usageChart" style="max-height:420px;"></canvas>
         </div>
